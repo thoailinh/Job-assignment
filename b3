@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+ 
+ 
+int main()
+{
+    int n, m;
+    cin >> n >> m;
+ 
+    vector<int> kq(n, 0);
+    vector<int> time;
+    vector<int> may(m, 0);
+    for (int i = 0; i < n; i++)
+    {
+        cin >> m;
+        time.push_back(m);
+    }
+    for (int i = 0; i < n; i++)
+    {
+        m = time[0];
+        int ind = 0, ima;
+        for (int j = 1; j < n; j++)
+        {
+            if (time[j] > m)
+            {
+                m = time[j];
+                ind = j;
+            }
+        }
+        //stable_sort(time.begin(), time.end());
+        m = may[0];
+        ima = 0;
+        for (int j = 1; j < may.size(); j++)
+        {
+            if (may[j] < m)
+            {
+                m = may[j];
+                ima = j;
+            }
+        }
+        //stable_sort(may.begin(), may.end());
+        may[ima] += time[ind];
+        time[ind] = -1;
+        kq[ind] = ima;
+    }
+    for (int i = 0; i < n; i++)
+        cout << kq[i] << " ";
+    system("pause");
+    return 0;
+}
