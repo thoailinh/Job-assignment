@@ -1,0 +1,62 @@
+//Có n công việc, được phân công cho m máy như nhau thực hiện đồng thời.
+//Hãy viết chương trình dùng thuật giảm heuristic tìm một phương án phân công sao cho 
+//thời gian để các máy hoàn thành hết n công việc là ngắn nhất.
+//INPUT
+//Dòng đầu tiên chứa hai số n và m
+//Dòng thứ hai chứa n số nguyên dương x0, x1, …, xn - 1 trong đó xi là thời gian cần thiết 
+//để một máy hoàn thành công việc i.
+//OUTPUT
+//Xuất trên một dòng n số nguyên dương y0, y1, …, yn - 1, giá trị mỗi số trong đoàn[0, m - 1] 
+//trong đó giá trị của yi là số thứ tự của máy được phân công để thực hiện công việc i.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+int main()
+{
+	int n, m;
+	cin >> n >> m;
+
+	vector<int> kq(n, 0);
+	vector<int> time;
+	vector<int> may(m, 0);
+	for (int i = 0; i < n; i++)
+	{
+		cin >> m;
+		time.push_back(m);
+	}
+	for (int i = 0; i < n; i++)
+	{
+		m = time[0];
+		int ind = 0, ima;
+		for (int j = 1; j < n; j++)
+		{
+			if (time[j] > m)
+			{
+				m = time[j];
+				ind = j;
+			}
+		}
+		//stable_sort(time.begin(), time.end());
+		m = may[0];
+		ima = 0;
+		for (int j = 1; j < may.size(); j++)
+		{
+			if (may[j] < m)
+			{
+				m = may[j];
+				ima = j;
+			}
+		}
+		//stable_sort(may.begin(), may.end());
+		may[ima] += time[ind];
+		time[ind] = -1;
+		kq[ind] = ima;
+	}
+	for (int i = 0; i < n; i++)
+		cout << kq[i] << " ";
+	system("pause");
+	return 0;
+}
