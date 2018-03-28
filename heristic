@@ -1,0 +1,76 @@
+Có n công việc, được phân công cho m máy như nhau thực hiện đồng thời. Hãy viết chương trình tìm một phương án phân công sao cho thời gian để các máy hoàn thành hết n công việc là ngắn nhất. (Thời gian bắt buộc phải ngắn nhất, không chấp nhận sai số)
+INPUT
+Dòng đầu tiên chứa hai số n và m
+Dòng thứ hai chứa n số nguyên dương x0, x1, …, xn-1 trong đó xi là thời gian cần thiết để một máy hoàn thành công việc i.
+OUTPUT
+Xuất trên một dòng n số nguyên dương y0, y1, …,yn-1, giá trị mỗi số trong đoàn [0, m-1] trong đó giá trị của yi là số thứ tự của máy được phân công để thực hiện công việc i.
+VÍ DỤ
+Input
+Output
+8 3
+722 985 380 129 966 310 56 374
+1 2 1 1 0 2 1 0
+8 2
+975 924 415 661 292 750 586 195
+1 0 0 1 0 1 0 0
+#include <iostream>
+#include <math.h>
+#include <vector>
+using namespace std;
+void Input(int *&timeForWork, int &workNum, int & comNum) {
+    cin >> workNum >> comNum;
+    timeForWork = new int[workNum];
+    for (int i = 0; i < workNum; i++) {
+        cin >> timeForWork[i];
+    }
+}
+int findMaxTimeOfComs(vector<int> a, int size) {
+    int max = a[0];
+    for (int i = 1; i < size; i++) {
+        if (max < a[i]) {
+            max = a[i];
+        }
+    }
+    return max;
+}
+void exhautedSearch(int *timeForWork, int workNum, int comNum) {
+    vector<int> distributingWorking(workNum, 0), result(workNum, 0);
+    vector<int> minTimeForComs(workNum, 0);
+    for (int i = 0; i < workNum; i++) {
+        minTimeForComs[0] += timeForWork[i];
+    }
+    vector<int> minTimeTemp(workNum, 0);
+    minTimeTemp[0] = minTimeForComs[0];
+    int loop = pow(comNum, workNum);
+    for (int i = 0; i < loop-1; i++) {
+        int right = workNum - 1;
+        while (1) {
+            int *x = &distributingWorking[right--];
+            minTimeForComs[*x] -= timeForWork[right + 1];
+            if (*x + 1 < comNum) {
+                *x = *x + 1;
+                minTimeForComs[*x] += timeForWork[right + 1];
+                break;
+            }
+            else {
+                *x = 0;
+                minTimeForComs[*x] += timeForWork[right + 1];
+            }
+        }
+        if (findMaxTimeOfComs(minTimeForComs, comNum) < findMaxTimeOfComs(minTimeTemp, comNum)) {
+            minTimeTemp = minTimeForComs;
+            result = distributingWorking;
+        }
+    }
+    for (int i = 0; i < workNum; i++) {
+        cout << result[i] << " ";
+    }
+}
+int main() {
+    int *timeForWork, workNum, comNum;
+    Input(timeForWork, workNum, comNum);
+    exhautedSearch(timeForWork, workNum, comNum);
+    system("pause");
+    delete[] timeForWork;
+    return 0;
+}
